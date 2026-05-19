@@ -1,22 +1,13 @@
+﻿using Microsoft.EntityFrameworkCore;
 using CloudNativeInventory.Api.Data;
 using CloudNativeInventory.Api.Models;
-using Microsoft.EntityFrameworkCore;
-// using Azure.Identity; // TODO (Del 4): Kr�vs f�r Key Vault
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // .NET 9 OpenAPI
 
-// TODO (Del 4 i "Tips och f�rslag"): Konfigurera Azure Key Vault
-// Anv�nd Managed Identity f�r att h�mta hemligheter i produktion.
-// if (builder.Environment.IsProduction())
-// {
-//     var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);
-//     builder.Configuration.AddAzureKeyVault(keyVaultUrl, new DefaultAzureCredential());
-// }
-
-// Vi anv�nder InMemory-databas lokalt
+// اتصال به دیتابیس با استفاده از پوشه دیتای خودت
 builder.Services.AddDbContext<InventoryDbContext>(options =>
     options.UseInMemoryDatabase("InventoryDb"));
 
@@ -31,7 +22,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Seeda data (se till att vi inte dubblar om appen startas om i samma process)
+// سید کردن داده‌ها
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
