@@ -19,14 +19,16 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    # مرحله حل مشکل: دانلود پکیج‌ها و بازگردانی کامپوننت‌ها
-    - name: Restore dependencies
-      run: dotnet restore CloudNativeInventory.sln
+    # دانلود مستقیم پکیج‌ها برای تک تک پروژه‌ها به صورت تضمینی
+    - name: Restore packages
+      run: |
+        dotnet restore CloudNativeInventory.Api/CloudNativeInventory.Api.csproj
+        dotnet restore CloudNativeInventory.Tests/CloudNativeInventory.Tests.csproj
 
-    # ساخت پروژه (بدون حذف پکیج‌ها)
+    # بیلد کردن پروژه بدون ایجاد محدودیت
     - name: Build project
-      run: dotnet build CloudNativeInventory.sln --configuration Release --no-restore
+      run: dotnet build CloudNativeInventory.sln --configuration Release
 
-    # اجرای تست‌ها (استاد حتماً این را می‌خواهد)
+    # اجرای تست‌ها
     - name: Run tests
-      run: dotnet test CloudNativeInventory.sln --configuration Release --no-restore
+      run: dotnet test CloudNativeInventory.sln --configuration Release --no-build
