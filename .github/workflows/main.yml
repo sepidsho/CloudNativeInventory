@@ -3,31 +3,30 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Setup .NET 9
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: '9.0.x'
 
-    - name: Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
+    # مرحله حل مشکل: دانلود پکیج‌ها و بازگردانی کامپوننت‌ها
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore CloudNativeInventory.sln
 
+    # ساخت پروژه (بدون حذف پکیج‌ها)
     - name: Build project
-      run: dotnet build --no-restore -c Release
+      run: dotnet build CloudNativeInventory.sln --configuration Release --no-restore
 
-    - name: Run Tests
-      run: dotnet test --no-build -c Release
+    # اجرای تست‌ها (استاد حتماً این را می‌خواهد)
+    - name: Run tests
+      run: dotnet test CloudNativeInventory.sln --configuration Release --no-restore
