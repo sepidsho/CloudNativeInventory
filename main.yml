@@ -1,37 +1,28 @@
-﻿name: CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
+    branches: [ "master", "main" ]
+  pull_request:
     branches: [ "master", "main" ]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Setup .NET 9
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: '9.0.x'
 
-    # این همان بخش کش پکیج‌هاست که زمان را کوتاه می‌کند
-    - name: Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
-    - name: Restore dependencies
-      run: dotnet restore
-
+    # در این مرحله هم ریستور می‌کند و هم پروژه را بدون ارور می‌سازد
     - name: Build project
-      run: dotnet build --no-restore -c Release
+      run: dotnet build CloudNativeInventory.sln --configuration Release
 
-    # مرحله تست اجباری (اگر تست قرمز شود، خط لوله متوقف می‌شود)
-    - name: Run Tests
-      run: dotnet test --no-build -c Release
-
-  # فعلاً برای نمره G همین که بخش تست و بیلد اتوماتیک در گیت‌هاب سبز شود ۵۰٪ کار سی‌آی است.
+    # اجرای تست‌ها
+    - name: Run tests
+      run: dotnet test CloudNativeInventory.sln --configuration Release --no-build
