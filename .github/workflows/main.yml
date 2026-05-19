@@ -19,16 +19,10 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    # دانلود مستقیم پکیج‌ها برای تک تک پروژه‌ها به صورت تضمینی
-    - name: Restore packages
-      run: |
-        dotnet restore CloudNativeInventory.Api/CloudNativeInventory.Api.csproj
-        dotnet restore CloudNativeInventory.Tests/CloudNativeInventory.Tests.csproj
+    # ۱. بیلد کردن مستقیم پروژه API (بدون واسطه قرار دادن فایل sln)
+    - name: Build API Project
+      run: dotnet build CloudNativeInventory.Api/CloudNativeInventory.Api.csproj --configuration Release
 
-    # بیلد کردن پروژه بدون ایجاد محدودیت
-    - name: Build project
-      run: dotnet build CloudNativeInventory.sln --configuration Release
-
-    # اجرای تست‌ها
-    - name: Run tests
-      run: dotnet test CloudNativeInventory.sln --configuration Release --no-build
+    # ۲. بیلد و اجرای مستقیم پروژه تست
+    - name: Run Tests
+      run: dotnet test CloudNativeInventory.Tests/CloudNativeInventory.Tests.csproj --configuration Release
