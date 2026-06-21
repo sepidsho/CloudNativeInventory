@@ -14,7 +14,8 @@ RUN dotnet publish -c Release -o /app/publish
 # مرحله 2: ساخت ایمیج نهایی که سبک و آماده اجراست
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY --from=build /app/publish . 
+USER app	# using the default non-root user for security 
 
 # تنظیم پورت (برای .NET 9 پورت 8080 استاندارد است)
 EXPOSE 8080
