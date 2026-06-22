@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// اتصال کاملاً استاندارد و مدرن به Azure Key Vault با استفاده از نوع داده Uri
+// اتصال استاندارد و مدرن به Azure Key Vault بدون ارور کامپایل
 if (builder.Environment.IsProduction())
 {
     var keyVaultUrl = builder.Configuration["KeyVaultUrl"];
@@ -28,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// اندپوینت تایید صحت عملکرد که مالین خواسته بود
+// اندپوینت تایید صحت عملکرد طبق خواسته‌ی مالین
 app.MapGet("/system/verify-integration", async (IConfiguration config) =>
 {
     try
