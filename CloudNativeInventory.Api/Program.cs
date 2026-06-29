@@ -6,7 +6,7 @@ using Azure.Extensions.AspNetCore.Configuration.Secrets;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 // اتصال استاندارد و مدرن به Azure Key Vault بدون ارور کامپایل
 if (builder.Environment.IsProduction())
@@ -26,7 +26,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI();
 }
 
 // اندپوینت تایید صحت عملکرد طبق خواسته‌ی مالین
