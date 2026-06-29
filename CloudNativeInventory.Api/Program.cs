@@ -24,11 +24,10 @@ builder.Services.AddDbContext<CloudNativeInventory.Api.Data.InventoryDbContext>(
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+
 app.UseSwagger();
 app.UseSwaggerUI();
-}
+
 
 // اندپوینت تایید صحت عملکرد طبق خواسته‌ی مالین
 app.MapGet("/system/verify-integration", async (IConfiguration config) =>
