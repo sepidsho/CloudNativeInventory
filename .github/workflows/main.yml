@@ -5,8 +5,8 @@ on:
 
 env:
   AZURE_CONTAINER_REGISTRY: "inventoryregistrysepid"
-  CONTAINER_APP_NAME: "deployment-dynamos-env"
-  RESOURCE_GROUP: "deployment-dynamos-rg"
+  CONTAINER_APP_NAME: "inventory-app"
+  RESOURCE_GROUP: "Inventory_RG"
 
 jobs:
   build-and-deploy:
